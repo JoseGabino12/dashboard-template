@@ -21,49 +21,49 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
+  { sucursal: "sucursal1", ventas: 275, fill: "#e76e50" },
+  { sucursal: "sucursal2", ventas: 200, fill: "#299d90" },
+  { sucursal: "sucursal3", ventas: 287, fill: "#f4a362" },
+  { sucursal: "sucursal4", ventas: 173, fill: "#e9c469" },
+  { sucursal: "sucursal5", ventas: 190, fill: "#264753" },
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  ventas: {
+    label: "Ventas",
   },
-  chrome: {
-    label: "Chrome",
+  sucursal1: {
+    label: "Sucursal 1",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  sucursal2: {
+    label: "Sucursal 2",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  sucursal3: {
+    label: "Sucursal 3",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  sucursal4: {
+    label: "Sucursal 4",
     color: "hsl(var(--chart-4))",
   },
-  other: {
-    label: "Other",
+  sucursal5: {
+    label: "Sucursal 5",
     color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig
 
 export function ChartSels() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
+  const totalVentas = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.ventas, 0)
   }, [])
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Product Sales</CardTitle>
-        <CardDescription>2020 Sales</CardDescription>
+        <CardTitle>Ventas por sucursal</CardTitle>
+        <CardDescription>Ventas 2020</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 p-5">
         <ChartContainer
@@ -78,8 +78,8 @@ export function ChartSels() {
 
             <Pie
               data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              dataKey="ventas"
+              nameKey="sucursal"
               innerRadius={60}
               strokeWidth={5}
               labelLine={false}
@@ -100,14 +100,14 @@ export function ChartSels() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalVentas.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Ventas
                         </tspan>
                       </text>
                     )
@@ -117,7 +117,7 @@ export function ChartSels() {
             </Pie>
 
             <ChartLegend
-              content={<ChartLegendContent nameKey="browser" className="text-lg" />}
+              content={<ChartLegendContent nameKey="sucursal" className="text-lg" />}
               className="flex-wrap mt-2 gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
             />
           </PieChart>
