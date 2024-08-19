@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
 
 import {
@@ -12,14 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+
 const chartData = [
   { sucursal: "sucursal1", ventas: 275, fill: "#e76e50" },
   { sucursal: "sucursal2", ventas: 200, fill: "#299d90" },
@@ -68,7 +67,7 @@ export function ChartSels() {
       <CardContent className="flex-1 p-5">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[400px]"
+          className="mx-auto aspect-square max-h-[450px]"
         >
           <PieChart>
             <ChartTooltip
@@ -115,14 +114,20 @@ export function ChartSels() {
                 }}
               />
             </Pie>
-
-            <ChartLegend
-              content={<ChartLegendContent nameKey="sucursal" className="text-lg" />}
-              className="flex-wrap mt-2 gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-            />
           </PieChart>
         </ChartContainer>
       </CardContent>
+
+      <CardFooter className="flex space-x-4 items-center justify-center flex-wrap">
+        {
+          chartData.map((item, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <div className="w-3 h-3" style={{ backgroundColor: item.fill }} />
+              <span className="text-sm">{item.sucursal}</span>
+            </div>
+          ))
+        }
+      </CardFooter>
     </Card>
   )
 }
