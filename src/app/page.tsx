@@ -1,18 +1,22 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Overview } from '@/components/overview';
+import { Overview } from '@/components/Overview';
 
 import { ChartSels } from '@/components/ChartSels';
+import { CardInfo } from '@/components/Card';
+import { DatePickerWithRange } from '@/components/DateRangePicker';
+import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from '@/components/ui/select';
 
 export default function Home() {
   return (
     <main className='p-5'>
       <div className="flex-1 space-y-4 p-8 pt-6">
 
-        <div className="flex items-center justify-between space-y-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 ">
           <h2 className="text-3xl font-bold tracking-tight">Reporte ejecutivo</h2>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
+            <DatePickerWithRange />
             <Button>Descargar</Button>
           </div>
         </div>
@@ -20,21 +24,17 @@ export default function Home() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Resumen</TabsTrigger>
-            <TabsTrigger value="sels">
-              Sucursales
-            </TabsTrigger>
-            <TabsTrigger value="reports" disabled>
-              Reportes
-            </TabsTrigger>
+            <TabsTrigger value="sels">Sucursales</TabsTrigger>
+            <TabsTrigger value="reports" disabled>Reportes</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total de ventas
-                  </CardTitle>
+              <CardInfo
+                title="Total de ventas"
+                value="$45,231.89"
+                subtitle="+20.1% desde el mes pasado"
+                icon={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -47,20 +47,14 @@ export default function Home() {
                   >
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                   </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% desde el mes pasado
-                  </p>
-                </CardContent>
-              </Card>
+                }
+              />
 
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Venta máxima por sucursal
-                  </CardTitle>
+              <CardInfo
+                title="Venta máxima por sucursal"
+                value="+2350"
+                subtitle="+180.1% desde el mes pasado"
+                icon={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -75,18 +69,14 @@ export default function Home() {
                     <circle cx="9" cy="7" r="4" />
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
-                  <p className="text-xs text-muted-foreground">
-                    +180.1% desde el mes pasado
-                  </p>
-                </CardContent>
-              </Card>
+                }
+              />
 
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Ventas comparadas con mes anterior</CardTitle>
+              <CardInfo
+                title="Ventas comparadas con mes anterior"
+                value="+12,234"
+                subtitle="+19% desde el mes pasado"
+                icon={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -100,20 +90,14 @@ export default function Home() {
                     <rect width="20" height="14" x="2" y="5" rx="2" />
                     <path d="M2 10h20" />
                   </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">
-                    +19% desde el mes pasado
-                  </p>
-                </CardContent>
-              </Card>
+                }
+              />
 
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Ventas de hoy
-                  </CardTitle>
+              <CardInfo
+                title="Ventas de hoy"
+                value="+573"
+                subtitle="+201 hace una hora"
+                icon={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -126,36 +110,19 @@ export default function Home() {
                   >
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                   </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
-                  <p className="text-xs text-muted-foreground">
-                    +201 hace una hora
-                  </p>
-                </CardContent>
-              </Card>
+                }
+              />
+
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
               
-              <Card className="col-span-4">
+              <Card className="col-span-7">
                 <CardHeader>
                   <CardTitle>Resumen</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Overview />
-                </CardContent>
-              </Card>
-
-              <Card className="col-span-3">
-                <CardHeader>
-                  <CardTitle>Ventas recientes</CardTitle>
-                  <CardDescription>
-                    Has realizado 265 ventas este mes.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Ver todo</Button>
                 </CardContent>
               </Card>
             </div>
