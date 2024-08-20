@@ -1,23 +1,27 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Overview } from '@/components/Overview';
 
 import { ChartSels } from '@/components/ChartSels';
 import { CardInfo } from '@/components/Card';
 import { DatePickerWithRange } from '@/components/DateRangePicker';
-import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from '@/components/ui/select';
+
+import { Search as SearchIcon } from 'lucide-react'
+import { Reports } from '@/components/Reports';
 
 export default function Home() {
   return (
     <main className='p-5'>
       <div className="flex-1 space-y-4 p-8 pt-6">
 
-        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 ">
+        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Reporte ejecutivo</h2>
           <div className="flex items-center flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
             <DatePickerWithRange />
-            <Button>Descargar</Button>
+            <Button>
+              <SearchIcon className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -25,7 +29,7 @@ export default function Home() {
           <TabsList>
             <TabsTrigger value="overview">Resumen</TabsTrigger>
             <TabsTrigger value="sels">Sucursales</TabsTrigger>
-            <TabsTrigger value="reports" disabled>Reportes</TabsTrigger>
+            <TabsTrigger value="reports">Reportes</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="space-y-4">
@@ -130,6 +134,10 @@ export default function Home() {
 
           <TabsContent value="sels" className="space-y-4">
             <ChartSels />
+          </TabsContent>
+
+          <TabsContent value="reports" className="space-y-4">
+            <Reports />
           </TabsContent>
         </Tabs>
       </div>

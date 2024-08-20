@@ -13,31 +13,31 @@ import {
 } from "@/components/ui/select"
 
 const allData = [
-  { date: "2024-04-01", value: 473 },
-  { date: "2024-04-02", value: 252 },
-  { date: "2024-04-03", value: 71 },
-  { date: "2024-04-04", value: 238 },
-  { date: "2024-04-05", value: 223 },
-  { date: "2024-04-06", value: 272 },
-  { date: "2024-04-07", value: 227 },
-  { date: "2024-04-08", value: 333 },
-  { date: "2024-04-09", value: 300 },
-  { date: "2024-04-10", value: 423 },
-  { date: "2024-04-11", value: 354 },
-  { date: "2024-04-12", value: 181 },
-  { date: "2024-04-13", value: 483 },
-  { date: "2024-04-14", value: 103 },
-  { date: "2024-04-15", value: 62 },
-  { date: "2024-04-16", value: 67 },
-  { date: "2024-04-17", value: 53 },
-  { date: "2024-04-18", value: 383 },
-  { date: "2024-04-19", value: 255 },
-  { date: "2024-04-20", value: 327 },
-  { date: "2024-05-01", value: 123 },
-  { date: "2024-05-02", value: 234 },
-  { date: "2024-05-03", value: 345 },
-  { date: "2024-06-01", value: 456 },
-  { date: "2024-06-02", value: 567 },
+  { date: "2024-04-01", ventas: 473 },
+  { date: "2024-04-02", ventas: 252 },
+  { date: "2024-04-03", ventas: 71 },
+  { date: "2024-04-04", ventas: 238 },
+  { date: "2024-04-05", ventas: 223 },
+  { date: "2024-04-06", ventas: 272 },
+  { date: "2024-04-07", ventas: 227 },
+  { date: "2024-04-08", ventas: 333 },
+  { date: "2024-04-09", ventas: 300 },
+  { date: "2024-04-10", ventas: 423 },
+  { date: "2024-04-11", ventas: 354 },
+  { date: "2024-04-12", ventas: 181 },
+  { date: "2024-04-13", ventas: 483 },
+  { date: "2024-04-14", ventas: 103 },
+  { date: "2024-04-15", ventas: 62 },
+  { date: "2024-04-16", ventas: 67 },
+  { date: "2024-04-17", ventas: 53 },
+  { date: "2024-04-18", ventas: 383 },
+  { date: "2024-04-19", ventas: 255 },
+  { date: "2024-04-20", ventas: 327 },
+  { date: "2024-05-01", ventas: 123 },
+  { date: "2024-05-02", ventas: 234 },
+  { date: "2024-05-03", ventas: 345 },
+  { date: "2024-06-01", ventas: 456 },
+  { date: "2024-06-02", ventas: 567 },
 ]
 
 export function Overview() {
@@ -58,7 +58,7 @@ export function Overview() {
     const data = filteredData.find((item) => item.date === formattedDate)
     return {
       date: formattedDate,
-      value: data ? data.value : 0,
+      ventas: data ? data.ventas : 0,
     }
   })
 
@@ -107,7 +107,7 @@ export function Overview() {
             }
           />
           <Area
-            dataKey="value"
+            dataKey="ventas"
             type="monotone"
             stroke="#8884d8"
             fillOpacity={1}
