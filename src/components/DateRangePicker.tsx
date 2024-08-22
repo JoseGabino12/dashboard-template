@@ -6,7 +6,10 @@ import { es } from "date-fns/locale"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
+import { Search as SearchIcon } from 'lucide-react'
+
 import { cn } from "@/lib/utils"
+import { formatDate } from "@/lib/utilsSale"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -15,17 +18,28 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function DatePickerWithRange({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const today = new Date()
+import { DateRangePickerProps } from "@/interfaces/interfaces"
+
+export function DatePickerWithRange({ saleByDate }: DateRangePickerProps) {
+  const today = new Date();
+  const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
+
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: today,
+    from: localToday,
     to: undefined,
   })
 
+  const handleClickDate = () => {
+    const formattedFrom = formatDate(date?.from)
+    const formattedTo = date?.to ? formatDate(date.to) : formattedFrom
+
+    formattedFrom !== undefined &&
+      formattedTo !== undefined &&
+      saleByDate(formattedFrom, formattedTo)  
+  }
+
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("flex gap-2")}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -63,6 +77,10 @@ export function DatePickerWithRange({
           />
         </PopoverContent>
       </Popover>
+
+      <Button className="w-14" onClick={handleClickDate}>
+        <SearchIcon className="h-4 w-4" />
+      </Button>
     </div>
   )
 }

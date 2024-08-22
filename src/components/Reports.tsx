@@ -7,21 +7,22 @@ import { Button } from './ui/button';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
-import { sellers } from '@/lib/data';
+import { OverviewProps } from '@/interfaces/interfaces';
 
-export function Reports () {
+export function Reports ({ data }: OverviewProps) {
   const handleExport = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Vendedores');
 
     worksheet.columns = [
       { header: 'Vendedor', key: 'vendedor', width: 20 },
+      { header: 'Ventas', key: 'ventas', width: 20 },
       { header: 'Contado', key: 'contado', width: 20 },
       { header: 'Crédito', key: 'credito', width: 20 },
       { header: 'Total', key: 'total', width: 20 },
     ];
 
-    worksheet.addRows(sellers);
+    worksheet.addRows(data);
 
     workbook.xlsx.writeBuffer().then((buffer) => {
       saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), 'vendedores.xlsx');
@@ -35,7 +36,7 @@ export function Reports () {
         <Button onClick={ handleExport }>Exportar</Button>
       </CardHeader>
       <CardContent>
-        <DataTable />
+        <DataTable data={ data } />
       </CardContent>
     </Card>
   )

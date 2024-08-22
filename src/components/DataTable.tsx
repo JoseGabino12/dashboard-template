@@ -26,15 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { sellers } from "@/lib/data"
 import { DataTablePagination } from "@/components/TablePagination"
-
-export type SalesData = {
-  vendedor: string
-  contado: number
-  credito: number
-  total: number
-}
+import { OverviewProps, SalesData } from "@/interfaces/interfaces"
+import { aggregateSalesData } from "@/lib/utilsSale"
 
 export const columns: ColumnDef<SalesData>[] = [
   {
@@ -53,39 +47,87 @@ export const columns: ColumnDef<SalesData>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("vendedor")}</div>,
   },
   {
+    accessorKey: "ventas",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-right"
+        >
+          Ventas
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="text-start font-bold">{row.getValue("ventas")}</div>,
+  },
+  {
     accessorKey: "contado",
-    header: () => <div className="text-right">Contado</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-right"
+        >
+          Contado
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => (
-      <div className="text-right font-medium">{row.getValue("contado")}</div>
+      <div className="text-start font-medium">{(row.getValue("contado") as number).toFixed(2)}</div>
     ),
   },
   {
     accessorKey: "credito",
-    header: () => <div className="text-right">Crédito</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-right"
+        >
+          Crédito
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => (
-      <div className="text-right font-medium">{row.getValue("credito")}</div>
+      <div className="text-start font-medium">{(row.getValue("credito") as number).toFixed(2)}</div>
     ),
   },
   {
     accessorKey: "total",
-    header: () => <div className="text-right">Total</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-right"
+        >
+          Total
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => (
-      <div className="text-right font-bold">{row.getValue("total")}</div>
+      <div className="text-start font-bold">{(row.getValue("total") as number).toFixed(2)}</div>
     ),
   },
 ]
 
-export function DataTable() {
+export function DataTable({ data }: OverviewProps) {
+  const aggregatedData = React.useMemo(() => aggregateSalesData(data), [data]);
+
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: sellers,
+    data: aggregatedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

@@ -118,7 +118,7 @@ export function ChartSels() {
         </ChartContainer>
       </CardContent>
 
-      <CardFooter className="flex space-x-4 items-center justify-center flex-wrap">
+      <CardFooter className="flex space-x-4 space-y-2 mb-5 items-center justify-center flex-wrap">
         {
           chartData.map((item, index) => (
             <div key={index} className="flex items-center space-x-2">

@@ -1,0 +1,21 @@
+/* Estilos generales para las flechas */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000; /* Cambia el color de las flechas según tu diseño */
+}
+
+/* Ocultar las flechas en dispositivos móviles (ancho de pantalla menor a 768px) */
+@media (max-width: 767px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+}
+
+/* Mostrar las flechas en pantallas más grandes (ancho de pantalla de 768px en adelante) */
+@media (min-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: block;
+  }
+}
