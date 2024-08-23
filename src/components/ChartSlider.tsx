@@ -1,34 +1,38 @@
 'use client'
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import '@/styles/slider.css'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 import { ChartSels } from './charts/ChartSels';
+import type { ChartSliderProps } from '@/interfaces/interfaces';
+import { ChartBloquera } from "./charts/ChartBloquera";
+import { ChartConcretera } from "./charts/ChartConcretera";
 
-export function ChartSlider() {
+export function ChartSlider({ sales, bloqueraItems, concreteraItems }: ChartSliderProps) {
   return (
-    <Swiper
-      spaceBetween={100}
-      slidesPerView={1}
-      navigation={true}
-      pagination={{
-        dynamicBullets: true,
-      }}
-      modules={[Navigation, Pagination]}
-    >
-      <SwiperSlide>
-        <ChartSels />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ChartSels />
-      </SwiperSlide>
+    <Carousel>
+      <CarouselContent>
+        <CarouselItem>
+          <ChartBloquera bloqueraItems={ bloqueraItems } />
+        </CarouselItem>
 
-      {/* Puedes agregar más SwiperSlides si es necesario */}
-    </Swiper>
+        <CarouselItem>
+          <ChartSels sales={ sales } />
+        </CarouselItem>
+
+        <CarouselItem>
+          <ChartConcretera concreteraItems={ concreteraItems } />
+        </CarouselItem>
+
+      </CarouselContent>
+
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   );
 }

@@ -18,9 +18,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import { DateRangePickerProps } from "@/interfaces/interfaces"
+import type { DateRangePickerProps } from "@/interfaces/interfaces"
 
-export function DatePickerWithRange({ saleByDate }: DateRangePickerProps) {
+export function DatePickerWithRange({ saleByDate, bloqueraItemsData, concreteraItemsData }: DateRangePickerProps) {
   const today = new Date();
   const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
 
@@ -33,9 +33,11 @@ export function DatePickerWithRange({ saleByDate }: DateRangePickerProps) {
     const formattedFrom = formatDate(date?.from)
     const formattedTo = date?.to ? formatDate(date.to) : formattedFrom
 
-    formattedFrom !== undefined &&
-      formattedTo !== undefined &&
-      saleByDate(formattedFrom, formattedTo)  
+    if (formattedFrom && formattedTo) {
+      saleByDate(formattedFrom, formattedTo);
+      bloqueraItemsData(formattedFrom, formattedTo);
+      concreteraItemsData(formattedFrom, formattedTo);
+    }
   }
 
   return (
@@ -54,11 +56,11 @@ export function DatePickerWithRange({ saleByDate }: DateRangePickerProps) {
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "dd-MMMM-yyyy", { locale: es })} -{" "}
-                  {format(date.to, "dd-MMMM-yyyy", { locale: es })}
+                  {format(date.from, "dd-MMM-yyyy", { locale: es })} -{" "}
+                  {format(date.to, "dd-MMM-yyyy", { locale: es })}
                 </>
               ) : (
-                format(date.from, "dd-MMMM-yyyy", { locale: es })
+                format(date.from, "dd-MMM-yyyy", { locale: es })
               )
             ) : (
               <span>Selecciona una fecha</span>

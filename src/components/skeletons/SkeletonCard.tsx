@@ -6,7 +6,6 @@ export function SkeletonCard () {
       <Skeleton className="h-24 w-full rounded-md" />
       <Skeleton className="h-24 w-full rounded-md" />
       <Skeleton className="h-24 w-full rounded-md" />
-      <Skeleton className="h-24 w-full rounded-md" />
     </>
   )
 }

@@ -1,19 +1,9 @@
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const from = searchParams.get('del');
-  const to = searchParams.get('al');
-
-  if (!from || !to) {
-    return NextResponse.json({ 
-      message: 'Parámetros inválidos', 
-      error: 'Los parámetros de búsqueda son requeridos' 
-    }, { status: 400 });
-  }
 
   try {
-    const response = await fetch(`x?del=${from}&al=${to}`, {
+    const response = await fetch(`x`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${process.env.TOKEN}`,

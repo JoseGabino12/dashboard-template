@@ -1,42 +1,54 @@
 'use client'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { DataTable } from './DataTable';
+import { ReportTable } from './tables/ReportTable';
 import { Button } from './ui/button';
 
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
-import { OverviewProps } from '@/interfaces/interfaces';
+import type { ReportsProps } from '@/interfaces/interfaces';
+import { aggregateData } from '@/lib/utilsSale';
 
-export function Reports ({ data }: OverviewProps) {
+export function Reports<T extends object>({
+  data,
+  columns,
+  title,
+  fileName,
+  excelColumns,
+  aggregationKey,
+  fieldsToAggregate
+}: ReportsProps<T> & { aggregationKey?: keyof T, fieldsToAggregate?: (keyof T)[] }) {
+
+  const aggregatedData = aggregationKey && fieldsToAggregate
+    ? aggregateData(data, aggregationKey, fieldsToAggregate)
+    : data;
+
   const handleExport = () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Vendedores');
+    const worksheet = workbook.addWorksheet(title);
 
-    worksheet.columns = [
-      { header: 'Vendedor', key: 'vendedor', width: 20 },
-      { header: 'Ventas', key: 'ventas', width: 20 },
-      { header: 'Contado', key: 'contado', width: 20 },
-      { header: 'Crédito', key: 'credito', width: 20 },
-      { header: 'Total', key: 'total', width: 20 },
-    ];
+    worksheet.columns = excelColumns.map(col => ({
+      header: col.header,
+      key: col.key as string,
+      width: col.width || 20,
+    }));
 
     worksheet.addRows(data);
 
     workbook.xlsx.writeBuffer().then((buffer) => {
-      saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), 'vendedores.xlsx');
+      saveAs(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `${fileName}.xlsx`);
     });
-  }
+  };
 
   return (
     <Card>
       <CardHeader className='flex flex-row items-center justify-between space-y-2'>
-        <CardTitle>Vendedores</CardTitle>
-        <Button onClick={ handleExport }>Exportar</Button>
+        <CardTitle>{title}</CardTitle>
+        <Button onClick={handleExport}>Exportar</Button>
       </CardHeader>
       <CardContent>
-        <DataTable data={ data } />
+        <ReportTable data={aggregatedData} columns={columns} />
       </CardContent>
     </Card>
   )
