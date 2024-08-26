@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Pie, PieChart, Sector, Label, Cell } from "recharts";
 
 import {
   Card,
@@ -13,19 +13,29 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  ChartStyle,
 } from "@/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ConcreteraItemsData } from "@/interfaces/interfaces";
 
-const chartConfig = {
-  total: {
-    label: "Total",
-    color: "hsl(var(--chart-4))",
-  },
-} satisfies ChartConfig;
+// Configuración dinámica del chart
+const generateChartConfig = (items: { articulo: string; total: number }[]) => {
+  return items.reduce((config, item, index) => {
+    config[item.articulo] = {
+      label: item.articulo,
+      color: `hsl(var(--chart-${index + 1}))`,
+    };
+    return config;
+  }, {} as ChartConfig);
+};
 
 export function ChartConcretera({ concreteraItems }: { concreteraItems: ConcreteraItemsData[] }) {
   // Agrupar por articulo y calcular totales
@@ -42,60 +52,124 @@ export function ChartConcretera({ concreteraItems }: { concreteraItems: Concrete
     return acc;
   }, [] as { articulo: string; total: number }[]);
 
+  const chartConfig = generateChartConfig(data);
+  const id = "pie-interactive-concretera";
+  const [activeArticulo, setActiveArticulo] = React.useState(data[0]?.articulo || "");
+
+  const activeIndex = React.useMemo(
+    () => data.findIndex((item) => item.articulo === activeArticulo),
+    [activeArticulo, data]
+  );
+  const articulos = React.useMemo(() => data.map((item) => item.articulo), [data]);
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Ventas de artículos concretera</CardTitle>
+    <Card data-chart={id} className="flex flex-col">
+      <ChartStyle id={id} config={chartConfig} />
+      <CardHeader className="flex-row items-start space-y-0 pb-0">
+        <div className="grid gap-1">
+          <CardTitle>Ventas Concretera</CardTitle>
+        </div>
+        <Select value={activeArticulo} onValueChange={setActiveArticulo}>
+          <SelectTrigger
+            className="ml-auto w-[260px] rounded-lg"
+            aria-label="Select a value"
+          >
+            <SelectValue placeholder="Seleccionar artículo" />
+          </SelectTrigger>
+          <SelectContent align="end" className="rounded-xl">
+            {articulos.map((key) => {
+              const config = chartConfig[key as keyof typeof chartConfig];
+
+              if (!config) {
+                return null;
+              }
+
+              return (
+                <SelectItem
+                  key={key}
+                  value={key}
+                  className="rounded-lg [&_span]:flex"
+                >
+                  <div className="flex items-center gap-2 text-xs">
+                    <span
+                      className="flex h-3 w-3 shrink-0 rounded-sm"
+                      style={{
+                        backgroundColor: chartConfig[key]?.color,
+                      }}
+                    />
+                    {config?.label}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
       </CardHeader>
-      <CardContent>
-        {
-          data.length > 0 ? (
-            <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-              <LineChart data={data}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="articulo"
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis />
-                <ChartTooltip
-                  cursor={{ stroke: "rgba(0, 0, 0, 0.1)" }}
-                  content={<ChartTooltipContent indicator="dot" />}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="ventas"
-                  stroke="var(--color-ventas)"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="mtsCubicos"
-                  stroke="var(--color-mtsCubicos)"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                  stroke="var(--color-total)"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-                <ChartLegend content={<ChartLegendContent />} />
-              </LineChart>
-            </ChartContainer>
-          ) : (
-            <div className="flex items-center justify-center h-[250px] text-muted-foreground">
-              No se encontró artículos de concretera para el rango de fechas especificado.
-            </div>
-          )
-        }
+      <CardContent className="flex flex-1 justify-center my-10">
+        <ChartContainer
+          id={id}
+          config={chartConfig}
+          className="mx-auto aspect-square w-full max-w-[300px]"
+        >
+          <PieChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Pie
+              data={data}
+              dataKey="total"
+              nameKey="articulo"
+              innerRadius={70}  // Aumentar el radio interno
+              strokeWidth={5}
+              activeIndex={activeIndex}
+              activeShape={({ outerRadius = 0, ...props }) => (
+                <g>
+                  <Sector {...props} outerRadius={outerRadius + 10} />
+                  <Sector
+                    {...props}
+                    outerRadius={outerRadius + 25}
+                    innerRadius={outerRadius + 12}
+                  />
+                </g>
+              )}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={chartConfig[entry.articulo]?.color} />
+              ))}
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    const formattedValue = Number(data[activeIndex]?.total
+                      .toFixed(2))
+                      .toLocaleString("es-MX");
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-2xl font-bold"  // Cambia a text-2xl o un tamaño más pequeño
+                        >
+                          {formattedValue}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Ventas
+                        </tspan>
+                      </text>
+                    );
+                  }
+                  return null;
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   );

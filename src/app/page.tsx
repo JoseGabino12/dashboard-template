@@ -22,6 +22,7 @@ import { SkeletonTabs } from '@/components/skeletons/SkeletonTabs';
 import { SkeletonCard } from '@/components/skeletons/SkeletonCard';
 import { SkeletonChart } from '@/components/skeletons/SkeletonChart';
 import Image from 'next/image';
+import { ChartPayment } from '@/components/charts/ChartPayment';
 
 export default function Home () {
   const {
@@ -167,12 +168,14 @@ export default function Home () {
                   />
 
                   <Reports
-                    title='Reporte de pagos'
+                    title='Antigüedad de saldos'
                     fileName='reporte_pagos'
                     data={ payment }
                     columns={ paymentColumns }
                     excelColumns={ paymentExcelColumns }
                   />
+
+                  <ChartPayment payments={ payment } />
                 </>
             }
 
