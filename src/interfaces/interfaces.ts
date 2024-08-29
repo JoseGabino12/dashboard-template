@@ -40,6 +40,7 @@ export interface ChartSliderProps {
   sales: SalesData[]
   bloqueraItems: BloqueraItemsData[]
   concreteraItems: ConcreteraItemsData[]
+  payment: PaymentData[]
 }
 
 // Enpoints
@@ -84,4 +85,8 @@ export interface ConcreteraItemsData {
   ventas: number,
   mtsCubicos: number,
   total: number
+}
+
+export interface JwtPayload {
+  exp: number; // Expiration time in seconds
 }

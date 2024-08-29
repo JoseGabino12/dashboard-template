@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 import type { ReportsProps } from '@/interfaces/interfaces';
 import { aggregateData } from '@/lib/utilsSale';
 
-export function Reports<T extends object>({
+export function Reports<T extends object> ({
   data,
   columns,
   title,
@@ -43,12 +43,12 @@ export function Reports<T extends object>({
 
   return (
     <Card>
-      <CardHeader className='flex flex-row items-center justify-between space-y-2'>
-        <CardTitle>{title}</CardTitle>
-        <Button onClick={handleExport}>Exportar</Button>
+      <CardHeader className='flex flex-row flex-wrap text-center justify-center items-center sm:justify-between sm:space-y-0 space-y-2'>
+        <CardTitle>{ title }</CardTitle>
+        <Button onClick={ handleExport }>Exportar</Button>
       </CardHeader>
       <CardContent>
-        <ReportTable data={aggregatedData} columns={columns} />
+        <ReportTable data={ aggregatedData } columns={ columns } />
       </CardContent>
     </Card>
   )

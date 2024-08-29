@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+import { jwtDecode } from 'jwt-decode';
+
+import type { JwtPayload } from '@/interfaces/interfaces';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -12,11 +15,34 @@ export async function GET(req: Request) {
     }, { status: 400 });
   }
 
+  const cookieHeader = req.headers.get('cookie');
+  const token = cookieHeader
+    ?.split('; ')
+    .find((row) => row.startsWith('token='))
+    ?.split('=')[1];
+
+  if (!token) {
+    return NextResponse.json({ 
+      message: 'No autenticado', 
+      error: 'Token no encontrado' 
+    }, { status: 401 });
+  }
+
   try {
+    const { exp } = jwtDecode<JwtPayload>(token);
+    const now = Date.now() / 1000;
+
+    if (exp < now) {
+      return NextResponse.json({ 
+        message: 'El token ha expirado', 
+        error: 'Por favor, autentíquese nuevamente' 
+      }, { status: 401 });
+    }
+
     const response = await fetch(`x?del=${from}&al=${to}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${process.env.TOKEN}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -24,9 +50,6 @@ export async function GET(req: Request) {
       let errorMessage = 'Un error inesperado ocurrió';
 
       switch (response.status) {
-        case 401:
-          errorMessage = 'El token expiró';
-          break;
         case 403:
           errorMessage = 'No tienes permisos para realizar esta acción';
           break;

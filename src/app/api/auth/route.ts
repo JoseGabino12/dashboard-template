@@ -1,38 +1,15 @@
-import type { JwtPayload } from '@/interfaces/interfaces';
-import { jwtDecode } from 'jwt-decode';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
-
-  const cookieHeader = req.headers.get('cookie');
-  const token = cookieHeader
-    ?.split('; ')
-    .find((row) => row.startsWith('token='))
-    ?.split('=')[1];
-
-  if (!token) {
-    return NextResponse.json({ 
-      message: 'No autenticado', 
-      error: 'Token no encontrado' 
-    }, { status: 401 });
-  }
+export async function POST(req: Request) {
+  const body = await req.json();
 
   try {
-    const { exp } = jwtDecode<JwtPayload>(token);
-    const now = Date.now() / 1000;
-
-    if (exp < now) {
-      return NextResponse.json({ 
-        message: 'El token ha expirado', 
-        error: 'Por favor, autentíquese nuevamente' 
-      }, { status: 401 });
-    }
-
     const response = await fetch(`x`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
